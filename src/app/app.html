@@ -1,0 +1,165 @@
+<div class="page">
+
+  <!-- NAV -->
+  <nav class="navbar">
+    <div class="nav-logo">AI Job Recommender</div>
+    <div class="nav-links">
+      <a href="#home">Home</a>
+      <a href="#how-it-works">How it Works</a>
+      <a href="#about">About</a>
+    </div>
+  </nav>
+
+  <!-- HOME / HERO -->
+  <section class="hero" id="home">
+    <div class="ai-badge">AI Powered Career Recommendation</div>
+    <h1>Find Your Ideal <br><span class="gradient-text">Tech Career</span></h1>
+    <p>Upload your resume or add your skills and our AI will recommend the best career paths tailored just for you.</p>
+  </section>
+
+  <!-- TOOL CARD -->
+  <section class="tool-wrapper">
+    <div class="container">
+
+      <h1>AI Job Recommendation</h1>
+
+      <input type="file" (change)="onFileSelected($event)" accept=".pdf,.doc,.docx"/>
+
+      <div class="input-section">
+        <input type="text" [(ngModel)]="skillInput" placeholder="Type a skill and press Add…" (keyup.enter)="addSkill()"/>
+        <button (click)="addSkill()">Add</button>
+      </div>
+
+      <div class="skills">
+        <span class="skill-chip" *ngFor="let skill of skills">
+          {{ skill }}
+          <button (click)="removeSkill(skill)">✕</button>
+        </span>
+      </div>
+
+      <button class="predict-btn" (click)="predict()" [disabled]="loading">
+        <span *ngIf="!loading">Get Recommendations</span>
+        <span *ngIf="loading" class="loader"></span>
+      </button>
+
+      <div class="results" *ngIf="result?.Prediction">
+        <div>
+          <h2>Predicted Category</h2>
+          <div class="prediction-card">
+            <p>{{ result.Prediction.name }}</p>
+            <span class="confidence-badge">{{ (result.Prediction.confidence * 100) | number:'1.0-1' }}% match</span>
+          </div>
+        </div>
+        <div>
+          <h2>Recommended Jobs</h2>
+          <div class="jobs-list">
+            <div *ngFor="let job of result.recommended_jobs" class="job-card">
+              <span class="job-rank">#{{ job.rank }}</span>
+              <div class="job-info">
+                <h3>{{ job.job_title }}</h3>
+                <p>{{ job.category }}</p>
+              </div>
+              <span class="match-pill">{{ job.match_percentage }}%</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="info-section" id="how-it-works">
+    <div class="info-inner">
+      <div class="section-eyebrow">How it Works</div>
+      <h2 class="info-title">Three steps to your next role</h2>
+      <p class="info-sub">No sign-up. No guesswork. Drop in your skills and let the model do the work.</p>
+
+      <div class="steps">
+
+        <div class="step-card">
+          <div class="step-icon blue">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
+          </div>
+          <div class="step-num">01</div>
+          <h3>Upload or Enter Skills</h3>
+          <p>Drag in your resume PDF or manually type in skills you've built — languages, frameworks, tools, anything.</p>
+        </div>
+
+        <div class="step-connector"></div>
+
+        <div class="step-card">
+          <div class="step-icon green">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+          </div>
+          <div class="step-num">02</div>
+          <h3>AI Analyses Your Profile</h3>
+          <p>The ML model maps your skillset against thousands of real job postings and predicts your best-fit category with a confidence score.</p>
+        </div>
+
+        <div class="step-connector"></div>
+
+        <div class="step-card">
+          <div class="step-icon gold">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          </div>
+          <div class="step-num">03</div>
+          <h3>Get Ranked Matches</h3>
+          <p>Receive a ranked list of job titles with match percentages, ordered by how closely your skills align with each role.</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section class="info-section" id="about">
+    <div class="info-inner about-inner">
+      <div class="about-text">
+        <div class="section-eyebrow">About</div>
+        <h2 class="info-title">Built for job seekers,<br>by a developer.</h2>
+        <p class="info-sub">This is a full-stack ML project — a Python FastAPI backend running a trained classification model, paired with an Angular frontend. It extracts skills from uploaded resumes and matches them against a curated job dataset to surface the most relevant career paths.</p>
+        <p class="info-sub">The model was trained on a labelled dataset of tech resumes using TF-IDF feature extraction and a multi-class classifier with softmax confidence scoring.</p>
+      </div>
+      <div class="about-stack">
+        <div class="stack-label">Tech Stack</div>
+        <div class="stack-chips">
+          <span class="stack-chip">
+            <img src="https://cdn.simpleicons.org/angular/DD0031" alt="Angular"/>
+            Angular
+          </span>
+          <span class="stack-chip">
+            <img src="https://cdn.simpleicons.org/typescript/3178C6" alt="TypeScript"/>
+            TypeScript
+          </span>
+          <span class="stack-chip">
+            <img src="https://cdn.simpleicons.org/python/3776AB" alt="Python"/>
+            Python
+          </span>
+          <span class="stack-chip">
+            <img src="https://cdn.simpleicons.org/fastapi/009688" alt="FastAPI"/>
+            FastAPI
+          </span>
+          <span class="stack-chip">
+            <img src="https://cdn.simpleicons.org/scikitlearn/F7931E" alt="scikit-learn"/>
+            scikit-learn
+          </span>
+          <span class="stack-chip">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9aa3bc" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-label="TF-IDF"><path d="M4 6h16M4 12h10M4 18h6"/><circle cx="18" cy="18" r="3"/><path d="M21 21l-1.5-1.5"/></svg>
+            TF-IDF
+          </span>
+          <span class="stack-chip">
+            <img src="https://cdn.simpleicons.org/render/46E3B7" alt="Render"/>
+            Render
+          </span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <p>© 2026 AI Job Recommendation System</p>
+  </footer>
+
+</div>
